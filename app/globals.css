@@ -1,26 +1,84 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Brand */
+  --color-primary: #7c3aed;
+  --color-primary-hover: #6d28d9;
+  --color-primary-light: #ede9fe;
+  --color-secondary: #a78bfa;
+
+  /* Background */
+  --color-background: #f8fafc;
+  --color-surface: #ffffff;
+
+  /* Text */
+  --color-text: #111827;
+  --color-text-secondary: #6b7280;
+
+  /* Borders */
+  --color-border: #e5e7eb;
+
+  /* Status */
+  --color-income: #16a34a;
+  --color-expense: #ef4444;
+  --color-warning: #f59e0b;
+
+  /* Shadows */
+  --shadow-small: 0 2px 10px rgba(15, 23, 42, 0.05);
+  --shadow-medium: 0 8px 25px rgba(15, 23, 42, 0.08);
+  --shadow-large: 0 18px 45px rgba(15, 23, 42, 0.12);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.dark {
+  --color-background: #0f172a;
+  --color-surface: #1e293b;
+
+  --color-text: #f8fafc;
+  --color-text-secondary: #cbd5e1;
+
+  --color-border: #334155;
+
+  --shadow-small: 0 2px 10px rgba(0, 0, 0, 0.25);
+  --shadow-medium: 0 8px 25px rgba(0, 0, 0, 0.35);
+  --shadow-large: 0 18px 45px rgba(0, 0, 0, 0.45);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* צבע סגול */
+html[data-accent="purple"] {
+  --color-primary: #7c3aed;
+  --color-primary-hover: #6d28d9;
+  --color-primary-light: #ede9fe;
+  --color-secondary: #a78bfa;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* צבע כחול */
+html[data-accent="blue"] {
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-primary-light: #dbeafe;
+  --color-secondary: #60a5fa;
+}
+
+/* צבע ירוק */
+html[data-accent="green"] {
+  --color-primary: #16a34a;
+  --color-primary-hover: #15803d;
+  --color-primary-light: #dcfce7;
+  --color-secondary: #4ade80;
+}
+
+/* צבע ורוד */
+html[data-accent="pink"] {
+  --color-primary: #db2777;
+  --color-primary-hover: #be185d;
+  --color-primary-light: #fce7f3;
+  --color-secondary: #f472b6;
+}
+
+/* צבע כתום */
+html[data-accent="orange"] {
+  --color-primary: #ea580c;
+  --color-primary-hover: #c2410c;
+  --color-primary-light: #ffedd5;
+  --color-secondary: #fb923c;
 }
