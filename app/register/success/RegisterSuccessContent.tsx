@@ -16,7 +16,7 @@ export default function RegisterSuccessPage() {
 
   async function handleResendEmail() {
     if (!email) {
-      setErrorMessage("לא נמצאה כתובת אימייל. נסי להירשם מחדש.");
+      setErrorMessage("לא נמצאה כתובת אימייל. נסה להירשם מחדש.");
       return;
     }
 
