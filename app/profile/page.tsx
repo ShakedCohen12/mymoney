@@ -1,7 +1,8 @@
-//app/profile/page.tsx
+// app/profile/page.tsx
 
 "use client";
 
+import AppleWalletConnection from "@/components/wallet/AppleWalletConnection";
 import { useRouter } from "next/navigation";
 import {
   ChevronLeft,
@@ -75,6 +76,7 @@ export default function ProfilePage() {
       <div className="mx-auto w-full max-w-xl px-5 py-8">
         <header className="relative overflow-hidden rounded-[38px] bg-[var(--color-primary)] px-6 py-7 text-white shadow-xl">
           <div className="absolute -left-10 -top-12 h-36 w-36 rounded-full bg-white/10 blur-2xl" />
+
           <div className="absolute -bottom-16 -right-8 h-44 w-44 rounded-full bg-white/10 blur-3xl" />
 
           <div className="relative">
@@ -87,7 +89,8 @@ export default function ProfilePage() {
             </h1>
 
             <p className="mt-2 max-w-sm text-sm leading-6 text-white/80">
-              כל מה שצריך כדי להתאים את MyMoney בדיוק אלייך.
+              כל מה שצריך כדי להתאים את MiSaldoAI בדיוק
+              אלייך.
             </p>
           </div>
         </header>
@@ -126,15 +129,22 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-background)] text-[var(--color-text-secondary)] transition group-hover:-translate-x-1 group-hover:text-[var(--color-primary)]">
-                  <ChevronLeft size={20} strokeWidth={2.2} />
+                  <ChevronLeft
+                    size={20}
+                    strokeWidth={2.2}
+                  />
                 </div>
               </button>
             );
           })}
         </section>
 
+        <section className="mt-8">
+          <AppleWalletConnection />
+        </section>
+
         <p className="mt-9 text-center text-xs text-[var(--color-text-secondary)]">
-          MyMoney
+          MiSaldoAI
         </p>
       </div>
     </main>
