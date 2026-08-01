@@ -10,12 +10,10 @@ const heebo = Heebo({
   variable: "--font-heebo",
   display: "swap",
 });
-
-export const metadata: Metadata = {
-  title: "MyMoney",
-  description: "ניהול הכסף שלך בצורה חכמה ופשוטה",
+export const metadata = {
+  title: "MiSaldoAI",
+  description: "ניהול פיננסי חכם ופשוט",
 };
-
 export default function RootLayout({
   children,
 }: Readonly<{
