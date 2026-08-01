@@ -9,7 +9,7 @@ type Props = {
   subcategories: Subcategory[];
   value: string | null;
   onChange: (value: string) => void;
-  onAddNew: () => void;
+  onAddNew?: () => void;
 };
 
 export default function SubcategorySelector({
@@ -26,14 +26,16 @@ export default function SubcategorySelector({
 
       <select
         value={value ?? ""}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(event) =>
+          onChange(event.target.value)
+        }
         className="w-full rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-4 text-[var(--color-text)] outline-none transition focus:border-[var(--color-primary)]"
       >
         <option
           value=""
           className="bg-[var(--color-surface)] text-[var(--color-text-secondary)]"
         >
-          בחר תת־קטגוריה
+          ללא תת־קטגוריה
         </option>
 
         {subcategories.map((subcategory) => (
@@ -47,13 +49,15 @@ export default function SubcategorySelector({
         ))}
       </select>
 
-      <button
-        type="button"
-        onClick={onAddNew}
-        className="text-sm font-semibold text-[var(--color-primary)] transition hover:opacity-80"
-      >
-        + הוסף תת־קטגוריה
-      </button>
+      {onAddNew && (
+        <button
+          type="button"
+          onClick={onAddNew}
+          className="text-sm font-semibold text-[var(--color-primary)] transition hover:opacity-80"
+        >
+          + הוסף תת־קטגוריה
+        </button>
+      )}
     </div>
   );
 }

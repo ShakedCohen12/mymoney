@@ -1,3 +1,5 @@
+// components/layout/BottomNavigation.tsx
+
 "use client";
 
 import Link from "next/link";
@@ -9,6 +11,7 @@ import {
   House,
   Plus,
   Settings,
+  Target,
 } from "lucide-react";
 
 const items = [
@@ -23,15 +26,20 @@ const items = [
     icon: ArrowUpDown,
   },
   {
+    href: "/budgets",
+    label: "תקציבים",
+    icon: CircleDollarSign,
+  },
+  {
     href: "/transactions/new",
     label: "הוספה",
     icon: Plus,
     primary: true,
   },
   {
-    href: "/budgets",
-    label: "תקציבים",
-    icon: CircleDollarSign,
+    href: "/goals",
+    label: "יעדים",
+    icon: Target,
   },
   {
     href: "/analytics",
@@ -74,7 +82,7 @@ export default function BottomNavigation() {
       aria-label="ניווט ראשי"
       className="fixed inset-x-0 bottom-0 z-50 border-t border-[var(--color-border)] bg-[var(--color-surface)]/95 px-2 pb-[max(10px,env(safe-area-inset-bottom))] pt-2 shadow-[0_-12px_35px_rgba(0,0,0,0.18)] backdrop-blur-xl"
     >
-      <div className="mx-auto grid h-[66px] max-w-xl grid-cols-6 items-end gap-1">
+      <div className="mx-auto grid h-[66px] max-w-2xl grid-cols-7 items-end gap-1">
         {items.map((item) => {
           const Icon = item.icon;
           const active = isItemActive(pathname, item.href);
@@ -126,10 +134,7 @@ export default function BottomNavigation() {
                     : "bg-transparent"
                 }`}
               >
-                <Icon
-                  size={21}
-                  strokeWidth={active ? 2.6 : 2}
-                />
+                <Icon size={21} strokeWidth={active ? 2.6 : 2} />
               </span>
 
               <span className="max-w-full truncate text-[10px] font-bold">

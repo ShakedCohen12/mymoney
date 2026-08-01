@@ -50,13 +50,6 @@ function extractAmount(text: string) {
   const amountPattern =
     "(\\d{1,6}(?:[.,]\\d{1,2})?)";
 
-  /*
-   * סדר העדיפויות חשוב:
-   * 1. סה"כ כולל מע"מ
-   * 2. נתקבל סך של
-   * 3. סכום לתשלום
-   * 4. Grand total / Amount due
-   */
   const priorityPatterns = [
     new RegExp(
       `סהכ\\s*כולל\\s*מעמ(?:\\s*\\(?שח\\)?)?[^\\d]{0,25}${amountPattern}`,
