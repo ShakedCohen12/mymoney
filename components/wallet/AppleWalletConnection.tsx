@@ -115,7 +115,7 @@ export default function AppleWalletConnection() {
               </h2>
 
               <p className="mt-2 text-sm leading-6 text-[var(--color-text-secondary)]">
-                צרי קוד אישי והכניסי אותו
+                צור קוד אישי והכנס אותו
                 לאוטומציה באפליקציית קיצורים. כל
                 עסקה שתישלח תישמר בחשבון שלך.
               </p>
