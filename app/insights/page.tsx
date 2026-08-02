@@ -89,7 +89,7 @@ function getRecommendation(insights: FinancialInsight[]) {
   }
 
   if (negativeInsight?.id === "largest-expense") {
-    return "בדקי אם ההוצאה הגדולה ביותר היא הוצאה חד־פעמית או הוצאה שעשויה לחזור גם בחודשים הבאים.";
+    return "יש לבדוק אם ההוצאה הגדולה ביותר היא הוצאה חד־פעמית או הוצאה שעשויה לחזור גם בחודשים הבאים.";
   }
 
   const topCategoryInsight = insights.find(

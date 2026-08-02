@@ -87,6 +87,9 @@ export async function POST(request: Request) {
   try {
     const body =
       (await request.json()) as AppleWalletPayload;
+      console.log("BODY:", body);
+      console.log("AMOUNT TYPE:", typeof body.amount);
+      console.log("AMOUNT VALUE:", body.amount);
 
     const token = cleanText(body.token, 300);
     const amount = parseAmount(body.amount);
