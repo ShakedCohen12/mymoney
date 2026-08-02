@@ -99,7 +99,7 @@ async function handleLogin(
         message.includes("too many")
       ) {
         setErrorMessage(
-          "בוצעו יותר מדי ניסיונות התחברות. נסי שוב בעוד כמה דקות."
+          "בוצעו יותר מדי ניסיונות התחברות. נסו שוב בעוד כמה דקות."
         );
         return;
       }
@@ -117,7 +117,7 @@ async function handleLogin(
       );
 
       setErrorMessage(
-        "ההתחברות לא הושלמה. נסי להתחבר מחדש."
+        "ההתחברות לא הושלמה. נסו להתחבר מחדש."
       );
       return;
     }
@@ -131,9 +131,50 @@ async function handleLogin(
     );
 
     setErrorMessage(
-      "אירעה שגיאה בחיבור. בדקי את החיבור לאינטרנט ונסי שוב."
+      "אירעה שגיאה בחיבור. בדקו את החיבור לאינטרנט ונסו שוב."
     );
   } finally {
+    setIsLoading(false);
+  }
+}
+
+async function handleGoogleLogin() {
+  setErrorMessage("");
+  setIsLoading(true);
+
+  try {
+    const supabase = createClient();
+
+    const { error } =
+      await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+
+    if (error) {
+      console.error(
+        "Google login error:",
+        error
+      );
+
+      setErrorMessage(
+        `לא הצלחנו להתחבר עם Google: ${error.message}`
+      );
+
+      setIsLoading(false);
+    }
+  } catch (error) {
+    console.error(
+      "Unexpected Google login error:",
+      error
+    );
+
+    setErrorMessage(
+      "אירעה שגיאה בהתחברות עם Google."
+    );
+
     setIsLoading(false);
   }
 }
@@ -309,6 +350,48 @@ async function handleLogin(
               ? "מתחבר..."
               : "התחברות"}
           </button>
+          <div className="relative my-5">
+  <div className="absolute inset-0 flex items-center">
+    <div className="w-full border-t border-white/10" />
+  </div>
+
+  <div className="relative flex justify-center">
+    <span className="bg-[#090A16] px-4 text-sm text-[#A8B0C7]">
+      או
+    </span>
+  </div>
+</div>
+
+<button
+  type="button"
+  onClick={handleGoogleLogin}
+  className="flex h-14 w-full items-center justify-center gap-3 rounded-2xl border border-white/10 bg-white/5 font-bold transition hover:bg-white/10"
+>
+  <svg
+    width="22"
+    height="22"
+    viewBox="0 0 48 48"
+  >
+    <path
+      fill="#EA4335"
+      d="M24 9.5c3.54 0 6.73 1.22 9.24 3.61l6.9-6.9C35.95 2.52 30.4 0 24 0 14.62 0 6.51 5.38 2.56 13.22l8.02 6.23C12.47 13.27 17.76 9.5 24 9.5z"
+    />
+    <path
+      fill="#4285F4"
+      d="M46.5 24.55c0-1.64-.15-3.22-.42-4.73H24v9h12.68c-.55 2.96-2.22 5.47-4.73 7.16l7.3 5.66C43.87 37.36 46.5 31.48 46.5 24.55z"
+    />
+    <path
+      fill="#FBBC05"
+      d="M10.58 28.55a14.5 14.5 0 010-9.1l-8.02-6.23A23.92 23.92 0 000 24c0 3.85.92 7.5 2.56 10.78l8.02-6.23z"
+    />
+    <path
+      fill="#34A853"
+      d="M24 48c6.4 0 11.77-2.11 15.69-5.73l-7.3-5.66c-2.03 1.36-4.64 2.17-8.39 2.17-6.24 0-11.53-3.77-13.42-9.95l-8.02 6.23C6.51 42.62 14.62 48 24 48z"
+    />
+  </svg>
+
+  המשך עם Google
+</button>
         </form>
 
         <div className="mt-6 flex items-center justify-center gap-2 text-xs text-[#A8B0C7]">

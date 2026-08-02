@@ -6,7 +6,7 @@ import { useState } from "react";
 import Button from "@/components/ui/Button";
 import { createClient } from "@/lib/supabase";
 
-export default function RegisterSuccessPage() {
+export default function RegisterSuccessContent() {
   const searchParams = useSearchParams();
   const email = searchParams.get("email") ?? "";
 
@@ -78,7 +78,7 @@ export default function RegisterSuccessPage() {
         </div>
 
         <p className="mt-5 text-sm leading-6 text-[var(--color-text-secondary)]">
-          לא מצאת את ההודעה? בדקי גם בתיקיות ספאם, קידומי מכירות או דואר
+          לא מצאת את ההודעה? יש לבדוק גם בתיקיות ספאם, קידומי מכירות או דואר
           זבל.
         </p>
 

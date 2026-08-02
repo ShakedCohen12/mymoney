@@ -498,11 +498,11 @@ export default function ReceiptScanner({
 
       if (detectedAmount) {
         setMessage(
-          `הסריקה הסתיימה. זוהה סכום של ${detectedAmount} ₪. בדקי את הפרטים לפני השמירה.`
+          `הסריקה הסתיימה. זוהה סכום של ${detectedAmount} ₪. יש לבדוק את הפרטים לפני השמירה.`
         );
       } else {
         setMessage(
-          "הסריקה הסתיימה. בדקי את הפרטים לפני השמירה."
+          "הסריקה הסתיימה. יש לבדוק את הפרטים לפני השמירה."
         );
       }
     } catch (error) {

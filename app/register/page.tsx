@@ -108,6 +108,44 @@ export default function RegisterPage() {
     );
   }
 
+  async function handleGoogleLogin() {
+  setErrorMessage("");
+  setIsLoading(true);
+
+  try {
+    const supabase = createClient();
+
+    const { error } =
+      await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+
+    if (error) {
+      console.error("Google signup error:", error);
+
+      setErrorMessage(
+        `לא הצלחנו להמשיך עם Google: ${error.message}`
+      );
+
+      setIsLoading(false);
+    }
+  } catch (error) {
+    console.error(
+      "Unexpected Google signup error:",
+      error
+    );
+
+    setErrorMessage(
+      "אירעה שגיאה בהרשמה באמצעות Google."
+    );
+
+    setIsLoading(false);
+  }
+}
+
   return (
     <main
       dir="rtl"
@@ -180,7 +218,50 @@ export default function RegisterPage() {
           <Sparkles size={14} />
           מתחילים חכם מהרגע הראשון
         </div>
+<button
+  type="button"
+  onClick={handleGoogleLogin}
+  disabled={isLoading}
+  className="mt-8 flex h-14 w-full items-center justify-center gap-3 rounded-2xl border border-white/10 bg-white/5 font-bold text-white transition hover:bg-white/10 disabled:cursor-wait disabled:opacity-60"
+>
+  <svg
+    width="22"
+    height="22"
+    viewBox="0 0 48 48"
+    aria-hidden="true"
+  >
+    <path
+      fill="#EA4335"
+      d="M24 9.5c3.54 0 6.73 1.22 9.24 3.61l6.9-6.9C35.95 2.52 30.4 0 24 0 14.62 0 6.51 5.38 2.56 13.22l8.02 6.23C12.47 13.27 17.76 9.5 24 9.5z"
+    />
+    <path
+      fill="#4285F4"
+      d="M46.5 24.55c0-1.64-.15-3.22-.42-4.73H24v9h12.68c-.55 2.96-2.22 5.47-4.73 7.16l7.3 5.66C43.87 37.36 46.5 31.48 46.5 24.55z"
+    />
+    <path
+      fill="#FBBC05"
+      d="M10.58 28.55a14.5 14.5 0 010-9.1l-8.02-6.23A23.92 23.92 0 000 24c0 3.85.92 7.5 2.56 10.78l8.02-6.23z"
+    />
+    <path
+      fill="#34A853"
+      d="M24 48c6.4 0 11.77-2.11 15.69-5.73l-7.3-5.66c-2.03 1.36-4.64 2.17-8.39 2.17-6.24 0-11.53-3.77-13.42-9.95l-8.02 6.23C6.51 42.62 14.62 48 24 48z"
+    />
+  </svg>
 
+  המשך עם Google
+</button>
+
+<div className="relative my-6">
+  <div className="absolute inset-0 flex items-center">
+    <div className="w-full border-t border-white/10" />
+  </div>
+
+  <div className="relative flex justify-center">
+    <span className="bg-[#111222] px-4 text-sm text-[#A8B0C7]">
+      או הרשמה עם אימייל
+    </span>
+  </div>
+</div>
         <form
           className="mt-8 space-y-5"
           onSubmit={handleRegister}

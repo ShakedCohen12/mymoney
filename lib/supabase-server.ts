@@ -24,7 +24,7 @@ export async function createServerSupabaseClient() {
             cookieStore.set(name, value, options);
           });
         } catch {
-          // במקרים שבהם אי אפשר לשנות cookies מתוך Server Component
+
         }
       },
     },
