@@ -22,21 +22,24 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] =
     useState(false);
 
-  async function handleLogin(
-    event: FormEvent<HTMLFormElement>
-  ) {
-    event.preventDefault();
+async function handleLogin(
+  event: FormEvent<HTMLFormElement>
+) {
+  event.preventDefault();
 
-    setErrorMessage("");
-    setIsLoading(true);
+  setErrorMessage("");
+  setIsLoading(true);
 
+  try {
     const formData = new FormData(
       event.currentTarget
     );
 
     const email = String(
       formData.get("email") ?? ""
-    ).trim();
+    )
+      .trim()
+      .toLowerCase();
 
     const password = String(
       formData.get("password") ?? ""
@@ -46,30 +49,94 @@ export default function LoginPage() {
       setErrorMessage(
         "יש למלא כתובת אימייל וסיסמה."
       );
-      setIsLoading(false);
       return;
     }
 
     const supabase = createClient();
 
-    const { error } =
-      await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-    setIsLoading(false);
+    const {
+      data,
+      error,
+    } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
     if (error) {
+      console.error("Supabase login error:", {
+        message: error.message,
+        status: error.status,
+        code: error.code,
+      });
+
+      const message =
+        error.message.toLowerCase();
+
+      if (
+        message.includes(
+          "email not confirmed"
+        )
+      ) {
+        setErrorMessage(
+          "כתובת האימייל עדיין לא אומתה. יש לפתוח את הודעת האימות וללחוץ על הקישור."
+        );
+        return;
+      }
+
+      if (
+        message.includes(
+          "invalid login credentials"
+        )
+      ) {
+        setErrorMessage(
+          "כתובת האימייל או הסיסמה אינן נכונות."
+        );
+        return;
+      }
+
+      if (
+        message.includes("rate limit") ||
+        message.includes("too many")
+      ) {
+        setErrorMessage(
+          "בוצעו יותר מדי ניסיונות התחברות. נסי שוב בעוד כמה דקות."
+        );
+        return;
+      }
+
       setErrorMessage(
-        "האימייל או הסיסמה אינם נכונים."
+        `לא הצלחנו להתחבר: ${error.message}`
       );
       return;
     }
 
-    router.push("/dashboard");
+    if (!data.user || !data.session) {
+      console.error(
+        "Login succeeded without user/session:",
+        data
+      );
+
+      setErrorMessage(
+        "ההתחברות לא הושלמה. נסי להתחבר מחדש."
+      );
+      return;
+    }
+
+    router.replace("/dashboard");
     router.refresh();
+  } catch (caughtError) {
+    console.error(
+      "Unexpected login error:",
+      caughtError
+    );
+
+    setErrorMessage(
+      "אירעה שגיאה בחיבור. בדקי את החיבור לאינטרנט ונסי שוב."
+    );
+  } finally {
+    setIsLoading(false);
   }
+}
 
   return (
     <main
