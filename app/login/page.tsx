@@ -112,11 +112,11 @@ export default function LoginPage() {
 
             <div>
               <h1 className="text-3xl font-black">
-                ברוכה השבה
+               ברוכים השבים
               </h1>
 
               <p className="mt-1 text-sm text-[#A8B0C7]">
-                התחברי והמשיכי לנהל את הכסף שלך
+               התחברו והמשיכו לנהל את הכסף שלכם
               </p>
             </div>
           </div>

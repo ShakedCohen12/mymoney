@@ -2,13 +2,7 @@ import { createHash } from "crypto";
 import { NextResponse } from "next/server";
 import { createSupabaseAdminClient } from "@/lib/supabase-admin";
 
-type AppleWalletPayload = {
-  token?: unknown;
-  amount?: unknown;
-  merchant?: unknown;
-  name?: unknown;
-  card?: unknown;
-};
+type AppleWalletPayload = Record<string, unknown>;
 
 function cleanText(
   value: unknown,
@@ -36,7 +30,8 @@ function parseAmount(value: unknown): number | null {
   }
 
   const normalized = String(value)
-    .replace(/[₪,\s]/g, "")
+    .replace(",", ".")
+    .replace(/[₪\s]/g, "")
     .replace(/[^\d.-]/g, "");
 
   const amount = Number(normalized);
@@ -46,6 +41,24 @@ function parseAmount(value: unknown): number | null {
   }
 
   return Math.round(amount * 100) / 100;
+}
+
+function normalizeKey(key: string) {
+  return key
+    .replace(/[\u200E\u200F\u202A-\u202E\u2066-\u2069]/g, "")
+    .trim()
+    .toLowerCase();
+}
+
+function normalizePayload(
+  body: AppleWalletPayload
+): AppleWalletPayload {
+  return Object.fromEntries(
+    Object.entries(body).map(([key, value]) => [
+      normalizeKey(key),
+      value,
+    ])
+  );
 }
 
 function hashToken(token: string) {
@@ -65,7 +78,6 @@ function createExternalKey({
   name: string | null;
   card: string | null;
 }) {
-
   const minuteBucket = Math.floor(
     Date.now() / 60_000
   );
@@ -85,11 +97,14 @@ function createExternalKey({
 
 export async function POST(request: Request) {
   try {
-    const body =
+    const rawBody =
       (await request.json()) as AppleWalletPayload;
-      console.log("BODY:", body);
-      console.log("AMOUNT TYPE:", typeof body.amount);
-      console.log("AMOUNT VALUE:", body.amount);
+
+    const body = normalizePayload(rawBody);
+
+    console.log("RAW BODY:", rawBody);
+    console.log("NORMALIZED BODY:", body);
+    console.log("NORMALIZED KEYS:", Object.keys(body));
 
     const token = cleanText(body.token, 300);
     const amount = parseAmount(body.amount);
@@ -112,6 +127,7 @@ export async function POST(request: Request) {
         {
           ok: false,
           error: "Invalid amount.",
+          receivedAmount: body.amount ?? null,
         },
         { status: 400 }
       );
@@ -163,13 +179,19 @@ export async function POST(request: Request) {
       card: cardName,
     });
 
-    const { data: existingImport } =
-      await supabase
-        .from("wallet_imports")
-        .select("id")
-        .eq("user_id", connection.user_id)
-        .eq("external_key", externalKey)
-        .maybeSingle();
+    const {
+      data: existingImport,
+      error: existingImportError,
+    } = await supabase
+      .from("wallet_imports")
+      .select("id")
+      .eq("user_id", connection.user_id)
+      .eq("external_key", externalKey)
+      .maybeSingle();
+
+    if (existingImportError) {
+      throw existingImportError;
+    }
 
     if (existingImport) {
       return NextResponse.json({
@@ -193,12 +215,7 @@ export async function POST(request: Request) {
         source: "apple_wallet",
         status: "pending",
         external_key: externalKey,
-        raw_payload: {
-          amount: body.amount ?? null,
-          merchant: body.merchant ?? null,
-          name: body.name ?? null,
-          card: body.card ?? null,
-        },
+        raw_payload: rawBody,
       })
       .select("id")
       .single();
@@ -207,12 +224,20 @@ export async function POST(request: Request) {
       throw insertError;
     }
 
-    await supabase
-      .from("wallet_connections")
-      .update({
-        last_used_at: new Date().toISOString(),
-      })
-      .eq("id", connection.id);
+    const { error: updateConnectionError } =
+      await supabase
+        .from("wallet_connections")
+        .update({
+          last_used_at: new Date().toISOString(),
+        })
+        .eq("id", connection.id);
+
+    if (updateConnectionError) {
+      console.error(
+        "Wallet connection update error:",
+        updateConnectionError
+      );
+    }
 
     return NextResponse.json({
       ok: true,
